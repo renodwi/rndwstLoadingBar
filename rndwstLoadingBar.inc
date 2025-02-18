@@ -1,8 +1,6 @@
-#if defined _include_rndwstLoadingBar
-	#error There is an '#include <rndwstSelection>' definition more than once! 
-#else
-	#define _include_rndwstLoadingBar
-#endif
+#include <a_samp>
+#include <YSI_Visual\y_commands>
+#include <sscanf2>
 
 #define MAX_rndwstLOADINGBAR_INFO 50
 enum rndwstLoadingBar_Player
@@ -20,7 +18,8 @@ enum rndwstLoadingBar_Player
 }
 new rndwstLoadingBarPlayer[MAX_PLAYERS][rndwstLoadingBar_Player];
 
-#define rndwstLoadingBarFunc:%0(%1) forward %0(%1); public %0(%1)
+#define Loop(%0,%1) for(new %0 = 0; %0 < %1; %0++)
+#define function%0(%1) forward %0(%1); public %0(%1)
 
 #define LoadingBar:%0(%1) \
 	forward ldbar_%0(%1); public ldbar_%0(%1)
@@ -38,7 +37,7 @@ public OnPlayerConnect(playerid)
 public OnPlayerDisconnect(playerid, reason)
 {
     rndwstLoadingBar_Destroy(playerid);
-    return CallLocalFunction("rndwstLDBar_OnPlayerDisconnect", "dd", playerid, reason);
+    return CallLocalFunction("rndwstLDBar__OnPlayerDisconnect", "dd", playerid, reason);
 }
 
 
@@ -58,7 +57,7 @@ stock rndwst_ShowPlayerLoadingBar(playerid, const function[], const info[], time
     return 1;
 }
 
-rndwstLoadingBarFunc: rndwstLoadingBar_Timer1(playerid)
+function rndwstLoadingBar_Timer1(playerid)
 {
     rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Percent] += 1;
 
@@ -80,7 +79,7 @@ rndwstLoadingBarFunc: rndwstLoadingBar_Timer1(playerid)
     return 1;
 }
 
-rndwstLoadingBarFunc: rndwstLoadingBar_Timer2(playerid) 
+function rndwstLoadingBar_Timer2(playerid) 
 {
     rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Count] += 1;
     if(rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Count] == 4) rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Count] = 0;
@@ -182,7 +181,7 @@ stock rndwstLoadingBar_Load(playerid)
 	PlayerTextDrawSetProportional(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 1);
 	PlayerTextDrawSetSelectable(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 0);
 
-	rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2] = CreatePlayerTextDraw(playerid, 320.000000, 254.000000, "Mengecek Kondisi Sendaraan.");
+	rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2] = CreatePlayerTextDraw(playerid, 320.000000, 254.000000, "Info");
 	PlayerTextDrawFont(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 1);
 	PlayerTextDrawLetterSize(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 0.287500, 1.150000);
 	PlayerTextDrawTextSize(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 400.000000, 291.000000);
@@ -197,6 +196,18 @@ stock rndwstLoadingBar_Load(playerid)
 	PlayerTextDrawSetSelectable(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 0);
     return 1;
 }
+
+#if defined _ALS_OnPlayerConnect
+	#undef OnPlayerConnect
+#else
+	#define _ALS_OnPlayerConnect
+#endif
+
+#if defined _ALS_OnPlayerDisconnect
+	#undef OnPlayerDisconnect
+#else
+	#define _ALS_OnPlayerDisconnect
+#endif
 
 #define OnPlayerConnect rndwstLDBar_OnPlayerConnect
 #define OnPlayerDisconnect rndwstLDBar_OnPlayerDisconnect
