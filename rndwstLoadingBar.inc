@@ -9,7 +9,7 @@ enum rndwstLoadingBar_Player
     PlayerText:rndwstLoadingBarPlayer_TD[3],
     
     bool:rndwstLoadingBarPlayer_Showed,
-    rndwstLoadingBarPlayer_Function,
+    rndwstLoadingBarPlayer_Function[32],
     rndwstLoadingBarPlayer_Info[MAX_rndwstLOADINGBAR_INFO],
     rndwstLoadingBarPlayer_Timer1,
     rndwstLoadingBarPlayer_Timer2,
@@ -24,8 +24,7 @@ new rndwstLoadingBarPlayer[MAX_PLAYERS][rndwstLoadingBar_Player];
 #define LoadingBar:%0(%1) \
 	forward ldbar_%0(%1); public ldbar_%0(%1)
 
-#define ShowPlayerLoadingBar(%0,%1, \
-	rndwst_ShowPlayerLoadingBar(%0, #%1,
+#define ShowPlayerLoadingBar rndwst_ShowPlayerLoadingBar
 
 public OnPlayerConnect(playerid)
 {
@@ -45,7 +44,7 @@ stock rndwst_ShowPlayerLoadingBar(playerid, const function[], const info[], time
 {
     if(rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Showed] == true) rndwstLoadingBar_Reset(playerid);
     
-    strpack(rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Function], function, 32 char); 
+    format(rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Function], 32, function); 
     format(rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Info], MAX_rndwstLOADINGBAR_INFO, info);
     rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Timer1] = SetTimerEx("rndwstLoadingBar_Timer1", time / 100, true, "d", playerid);
     rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Timer2] = SetTimerEx("rndwstLoadingBar_Timer2", 500, true, "d", playerid);
@@ -67,10 +66,10 @@ function rndwstLoadingBar_Timer1(playerid)
 
         new
 			string[40];
-		strcat(string, "ldbar_");
-		strcat(string, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Function]);
-
+        format(string, sizeof(string), "ldbar_%s", rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_Function]);
         CallLocalFunction(string, "d", playerid);
+
+        printf("Callbacks %s %d", string, playerid);
     }
     else
     {
@@ -169,7 +168,7 @@ stock rndwstLoadingBar_Load(playerid)
 
 	rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1] = CreatePlayerTextDraw(playerid, 268.000000, 271.000000, "_");
 	PlayerTextDrawFont(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 1);
-	PlayerTextDrawLetterSize(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 0.570833, 2.0000);
+	PlayerTextDrawLetterSize(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][2], 0.569, 1.899);
 	PlayerTextDrawTextSize(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 371.500000, 17.000000);
 	PlayerTextDrawSetOutline(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 1);
 	PlayerTextDrawSetShadow(playerid, rndwstLoadingBarPlayer[playerid][rndwstLoadingBarPlayer_TD][1], 0);
