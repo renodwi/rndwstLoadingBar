@@ -9,7 +9,7 @@ main()
 
 YCMD:test(playerid, params[], help) 
 {
-    ShowPlayerLoadingBar(playerid, Test, "Ini Info", 5000);
+    ShowPlayerLoadingBar(playerid, "Test", "Ini Info", 5000);
     return 1;
 }
 
