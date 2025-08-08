@@ -41,6 +41,7 @@ Include in your code and begin using the library:
 ```
 
 ## Usage
+Pleaseee check the test.pwn for example code
 
 <!--
 Write your code documentation or examples here. If your library is documented in
